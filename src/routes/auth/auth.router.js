@@ -3,27 +3,19 @@ import config from '../../config';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import User from '../../model/User';
-/* const users = [
-  {
-    firstName: 'mesut',
-    email: 'mesutcode@gmail.com',
-    password: 12345,
-  },
-];
- */
+
 const route = () => {
   const router = new express.Router();
 
   router.route('/login').post((req, res) => {
     const { email, password } = req.body;
 
-    //const user = users.find((user) => user.email === email);
-
     User.findOne({ email: email }).then((user) => {
       if (!user) {
         res.send({
           status: false,
-          message: 'böyle bir email adresi sitemde bulanamadı',
+          emailError: true,
+          message: 'Email address is not registered',
         });
       } else {
         if (
@@ -42,13 +34,11 @@ const route = () => {
         } else {
           res.send({
             status: false,
-            message: 'Hatalı şifre girdiniz',
+            message: 'You entered the wrong password',
           });
         }
       }
     });
-
-    // res.send('OKOK...');
   });
 
   router.route('/sign-up').post((req, res) => {
@@ -75,8 +65,7 @@ const route = () => {
       }
     );
 
-    console.log(email, password);
-    // res.send(passwordHashed);
+    console.log('success');
   });
 
   return router;
